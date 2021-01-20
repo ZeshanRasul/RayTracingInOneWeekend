@@ -9,7 +9,7 @@ int main()
 	std::string outputFilename = "Raytracer.png";
 	int width = 256;
 	int height = 256;
-	unsigned char* pixels = new unsigned char[double(width) * height * 3];
+	unsigned char* pixels = new unsigned char[size_t(width) * height * 3];
 
 
 	for (int j = height - 1; j >= 0; j--)
