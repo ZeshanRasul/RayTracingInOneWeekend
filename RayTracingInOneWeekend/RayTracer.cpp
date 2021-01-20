@@ -1,6 +1,8 @@
 #include "FreeImage.h"
 #include "string"
 #include <iostream>
+#include "vec3.h"
+#include "colour.h"
 
 int main()
 {
@@ -22,9 +24,9 @@ int main()
 			float g = float(j) / (height - 1);
 			float b = 0.25;
 
-			col[0] = b;
-			col[1] = unsigned char(255.99 * g);
-			col[2] = unsigned char(255.99 * r);
+			colour final_colour(r, g, b);
+			
+			write_colour(col, final_colour);
 
 			memcpy(&pixels[((j * width) + i) * 3], &col, 3);
 		}
