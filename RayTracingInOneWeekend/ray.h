@@ -14,7 +14,7 @@ public:
 	point3 getOrigin() const { return origin; }
 	vec3 getDirection() const { return direction; }
 
-	point3 at(double t)
+	point3 at(double t) const
 	{
 		return origin + direction * t;
 	}
