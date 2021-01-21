@@ -4,24 +4,34 @@
 #include "colour.h"
 #include "ray.h"
 
-bool hit_sphere(const point3& center, double radius, const ray& r)
+double hit_sphere(const point3& center, double radius, const ray& r)
 {
 	vec3 oc = r.getOrigin() - center;
-	auto a = dot(r.getDirection(), r.getDirection());
-	auto b = 2.0 * dot(oc, r.getDirection());
-	auto c = dot(oc, oc) - radius * radius;
-	auto discriminant = b * b - 4 * a * c;
-	return (discriminant > 0);
+	auto a = r.getDirection().length_squared();
+	auto half_b = dot(oc, r.getDirection());
+	auto c = oc.length_squared() - radius * radius;
+	auto discriminant = half_b * half_b - a * c;
+	
+	if (discriminant < 0)
+	{
+		return -1.0;
+	}
+	else
+	{
+		return (-half_b - sqrt(discriminant)) / a;
+	};
 }
 
-colour ray_colour(const ray& r)
+colour ray_colour(ray& r)
 {
-	if (hit_sphere(point3(0, 0, -1), 0.5, r))
+	auto t = hit_sphere(point3(0, 0, -1), 0.5, r);
+	if (t > 0.0)
 	{
-		return colour(1, 0, 0);
+		vec3 N = unit_vector(r.at(t) - vec3(0, 0, -1));
+		return 0.5 * colour(N.x() + 1, N.y() + 1, N.z() + 1);
 	}
 	vec3 unit_direction = unit_vector(r.getDirection());
-	auto t = 0.5 * (unit_direction.y() + 1.0);
+	t = 0.5 * (unit_direction.y() + 1.0);
 	return (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
 }
 
@@ -54,8 +64,8 @@ int main()
 		std::cerr << "Scanlines remaining: " << j << "\nPercent remaining: " << (double(j) / image_height) * 100 << "%\n" << std::flush;
 		for (int i = 0; i < image_width; i++)
 		{
-			auto u = double(i) / double((image_width - 1));
-			auto v = double(j) / double((image_height - 1));
+			auto u = double(i) / (image_width - 1);
+			auto v = double(j) / (image_height - 1);
 			ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
 			colour final_colour = ray_colour(r);	
 
