@@ -162,6 +162,7 @@
     <ClCompile Include="RayTracer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="colour.h" />
     <ClInclude Include="hittable.h" />
     <ClInclude Include="hittable_list.h" />
